@@ -1,7 +1,6 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
 import { debounce } from 'lodash';
-import { showError } from './js/error';
 import { fetchCountries } from './js/fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
@@ -50,3 +49,9 @@ function searchCountries(evt) {
     .catch(showError);
 }
 
+function showError() {
+    Notiflix.Notify.failure("Oops, there is no country with that name");
+    input.value = '';
+    countryInfo.innerHTML = '';
+    countryList.innerHTML = '';    
+}
