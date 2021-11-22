@@ -23,27 +23,19 @@ function searchCountries(evt) {
            }
     fetchCountries(trimInput)
     .then(data => {
-        if (data.length > maxLength) {
-            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
-            return;
-        }
+
         if (data.length === 1) {
-            countryList.innerHTML = '';
-            countryInfo.innerHTML = 
-            `<ul class=country-list>
-            <li class="country-item"><img class="flag-image" src="${data[0].flags.svg}"><h2 class="country-name">${data[0].name.official}</h2></li>
-            <li class="country-item"><span class="item-name">Capital:</span> ${data[0].capital}</li>
-            <li class="country-item"><span class="item-name">Population:</span> ${data[0].population}</li>
-            <li class="country-item"><span class="item-name">Languages:</span> ${Object.values(data[0].languages)} </li>
-            </ul>`
-        }    
+           return createdCard(data);
+        } 
+        if (data.length >= 2 && data.length <= maxLength) {
+            return renderCountries(data);
+        }
+           
         else {
-            console.log('data List', data)
             countryInfo.innerHTML = '';
-            countryList.innerHTML = 
-            data.map(country => {
-                return `<li class="country-item"><img class="flag-image" src="${country.flags.svg}">${country.name.official}</li>` 
-            }).join('');    
+            countryList.innerHTML = ''
+            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
+               
         }
     })
     .catch(showError);
@@ -54,4 +46,25 @@ function showError() {
     input.value = '';
     countryInfo.innerHTML = '';
     countryList.innerHTML = '';    
+}
+function createdCard(country) {
+    countryList.innerHTML = '';
+            countryInfo.innerHTML = 
+            `<ul class=country-list>
+            <li class="country-item"><img class="flag-image" src="${country[0].flags.svg}"><h2 class="country-name">${country[0].name.official}</h2></li>
+            <li class="country-item"><span class="item-name">Capital:</span> ${country[0].capital}</li>
+            <li class="country-item"><span class="item-name">Population:</span> ${country[0].population}</li>
+            <li class="country-item"><span class="item-name">Languages:</span> ${Object.values(country[0].languages)} </li>
+            </ul>`
+            Notiflix.Notify.success(`Passed Country ${country[0].name.official}`)
+}
+
+function renderCountries(countries) {
+    console.log('data List', countries)
+            countryInfo.innerHTML = '';
+            countryList.innerHTML = 
+            countries.map(country => {
+                return `<li class="country-item"><img class="flag-image" src="${country.flags.svg}">${country.name.official}</li>` 
+            }).join(''); 
+            Notiflix.Notify.info('Please enter a more specific name.')
 }
